@@ -2,7 +2,7 @@
 
 trap "echo Interrupted; exit;" SIGINT SIGTERM
 
-bin="java -jar duplication/out/artifacts/duplication_jar/duplication.jar"
+bin="java -jar out/artifacts/duplication_jar/duplication.jar"
 dataset_dir="secondstring_set/arff"
 unset _JAVA_OPTIONS
 

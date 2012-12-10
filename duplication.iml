@@ -7,7 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="nz.ac.waikato.cms.weka:weka-stable:3.6.8" level="project" />
+    <orderEntry type="library" name="junit:junit:4.11" level="project" />
+    <orderEntry type="library" name="simmetrics-build20121209" level="project" />
   </component>
 </module>
 
