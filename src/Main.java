@@ -1,7 +1,4 @@
-import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.InterfaceStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.*;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -11,9 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class Main {
 
@@ -42,8 +37,24 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String filename = args[0];
-        InterfaceStringMetric keyMetric = args[1].equals("sub") ? new SubstringEqualityMetric()
-                                                                : new StrictEqualityMetric();
+        String entityMetricName = args[1];
+        String keyMetricName = args[2];
+        float threshold = Float.parseFloat(args[3]);
+        boolean outputData = args.length > 4;
+
+        Map<String, InterfaceStringMetric> entityMetricMap = new HashMap<String, InterfaceStringMetric>();
+        entityMetricMap.put("levenshtein", new Levenshtein());
+        entityMetricMap.put("jaro-winkler", new JaroWinkler());
+        entityMetricMap.put("monge-elkan", new MongeElkan());
+        entityMetricMap.put("soundex", new Soundex());
+        entityMetricMap.put("cosine", new CosineSimilarity());
+        entityMetricMap.put("jaccard", new JaccardSimilarity());
+        InterfaceStringMetric entityMetric = entityMetricMap.get(entityMetricName);
+
+        Map<String, InterfaceStringMetric> keyMetricMap = new HashMap<String, InterfaceStringMetric>();
+        keyMetricMap.put("strict", new StrictEqualityMetric());
+        keyMetricMap.put("substring", new SubstringEqualityMetric());
+        InterfaceStringMetric keyMetric = keyMetricMap.get(keyMetricName);
 
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         ArffLoader.ArffReader arff = new ArffLoader.ArffReader(reader);
@@ -61,13 +72,11 @@ public class Main {
         while (values.hasMoreElements()) {
             String value = ((Instance) values.nextElement()).stringValue(ATTR_0_NUM);
             refinedValues.add(value.replaceAll("[-,.]", "").replaceAll("\\s+", " ").toLowerCase());
-//            System.out.println(value);
         }
-        float threshold = 0.99f;
-        List<List<Integer>> processedValues = process(refinedValues, new Levenshtein(), threshold);
-//        System.out.println(processedValues);
-
-        printMatching(data, ATTR_0_NUM, processedValues);
+        List<List<Integer>> processedValues = process(refinedValues, entityMetric, threshold);
+        if (outputData) {
+            printMatching(data, ATTR_0_NUM, processedValues);
+        }
 
         int truePositive = 0;
         int falseNegative = 0;
@@ -115,8 +124,10 @@ public class Main {
         float precision = (float) truePositive / (truePositive + falsePositive);
         float recall = (float) truePositive / (truePositive + falseNegative);
 
-        System.out.println("Precision: " + precision);
-        System.out.println("Recall: " + recall);
+        System.out.println(filename + " " + entityMetricName+ " " + keyMetricName
+                                    + " " + threshold + " " + precision + " " + recall);
+//        System.out.println("Precision: " + precision);
+//        System.out.println("Recall: " + recall);
 
     }
 
