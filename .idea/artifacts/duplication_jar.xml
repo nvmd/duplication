@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="duplication:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/duplication_jar</output-path>
+    <root id="archive" name="duplication.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="duplication" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-4.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/hamcrest-core-1.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/weka-stable-3.6.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/java-cup-0.11a.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../simmetrics/out/artifacts/simmetrics_w_src_jar/simmetrics.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

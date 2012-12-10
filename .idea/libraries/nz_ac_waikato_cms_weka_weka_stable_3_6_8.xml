@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="nz.ac.waikato.cms.weka:weka-stable:3.6.8">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/weka-stable-3.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/java-cup-0.11a.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/weka-stable-3.6.8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/weka-stable-3.6.8-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/java-cup-0.11a-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

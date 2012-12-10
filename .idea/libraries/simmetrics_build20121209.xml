@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="simmetrics-build20121209">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/simmetrics-build20121209.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/simmetrics-build20121209.jar!/" />
+    </SOURCES>
+  </library>
+</component>
