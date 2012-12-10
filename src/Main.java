@@ -1,3 +1,4 @@
+import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.InterfaceStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
@@ -9,6 +10,7 @@ import weka.core.converters.ArffLoader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -40,6 +42,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String filename = args[0];
+        InterfaceStringMetric keyMetric = args[1].equals("sub") ? new SubstringEqualityMetric()
+                                                                : new StrictEqualityMetric();
+
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         ArffLoader.ArffReader arff = new ArffLoader.ArffReader(reader);
         Instances data = arff.getData();
@@ -89,37 +94,7 @@ public class Main {
             refinedIds.add(value);
         }
 
-        List<List<Integer>> processedIds = process(refinedIds, new InterfaceStringMetric() {
-            @Override
-            public String getShortDescriptionString() {
-                return null;
-            }
-
-            @Override
-            public String getLongDescriptionString() {
-                return null;
-            }
-
-            @Override
-            public long getSimilarityTimingActual(String string1, String string2) {
-                return 0;
-            }
-
-            @Override
-            public float getSimilarityTimingEstimated(String string1, String string2) {
-                return 0;
-            }
-
-            @Override
-            public float getSimilarity(String string1, String string2) {
-                return (string1.equals(string2) ? 1.0f : 0.0f);
-            }
-
-            @Override
-            public String getSimilarityExplained(String string1, String string2) {
-                return null;
-            }
-        }, 1.0f);
+        List<List<Integer>> processedIds = process(refinedIds, keyMetric, 1.0f);
 //        System.out.println(processedIds);
 //        printMatching(data, ID_ATTRIBUTE_NUM, processedIds);
 
@@ -153,6 +128,72 @@ public class Main {
                 System.out.print(data.instance(index).stringValue(attribute) + " | ");
             }
             System.out.println();
+        }
+    }
+
+    private static class StrictEqualityMetric extends AbstractStringMetric implements Serializable {
+
+        @Override
+        public String getShortDescriptionString() {
+            return null;
+        }
+
+        @Override
+        public String getLongDescriptionString() {
+            return null;
+        }
+
+        @Override
+        public float getSimilarityTimingEstimated(String string1, String string2) {
+            return 0;
+        }
+
+        @Override
+        public float getSimilarity(String string1, String string2) {
+            return string1.equals(string2) ? 1.0f : 0.0f;
+        }
+
+        @Override
+        public float getUnNormalisedSimilarity(String string1, String string2) {
+            return getSimilarity(string1, string2);
+        }
+
+        @Override
+        public String getSimilarityExplained(String string1, String string2) {
+            return null;
+        }
+    }
+
+    private static class SubstringEqualityMetric extends AbstractStringMetric implements Serializable {
+
+        @Override
+        public String getShortDescriptionString() {
+            return null;
+        }
+
+        @Override
+        public String getLongDescriptionString() {
+            return null;
+        }
+
+        @Override
+        public String getSimilarityExplained(String string1, String string2) {
+            return null;
+        }
+
+        @Override
+        public float getSimilarityTimingEstimated(String string1, String string2) {
+            return 0;
+        }
+
+        @Override
+        public float getSimilarity(String string1, String string2) {
+            return string1.contains(string2) || string2.contains(string1) ? 1.0f : 0.0f;
+        }
+
+        @Override
+        public float getUnNormalisedSimilarity(String string1, String string2) {
+            return 0;
         }
     }
 }
