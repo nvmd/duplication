@@ -32,6 +32,42 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        final File root = new File(args[0]);
+        final float thresholdStep = args.length >= 1 ? Float.parseFloat(args[3]) : 0.1f;
+        final float thresholdStart = args.length >= 2 ?  Float.parseFloat(args[1]) : 0;
+        final float thresholdEnd = args.length >= 3 ?  Float.parseFloat(args[2]) : 1;
+
+        File[] files = root.listFiles();
+
+        for (File file : files) {
+            final String filepath = file.getCanonicalPath(); 
+            
+            final String keyMetricName = file.getName().contains("animal") ? "substring" : "strict";
+
+            InterfaceStringMetric keyMetric = keyMetricMap.get(keyMetricName);
+
+            Instances data = loadData(filepath);
+            List<String> refinedValues = getValues(data);
+            List<String> refinedIds = getIds(data);
+
+            List<List<Integer>> processedIds = process(refinedIds, keyMetric, 1.0f);
+
+            for (final InterfaceStringMetric entityMetric : entityMetricMap.values()) {
+                for (float threshold = thresholdStart; threshold <= thresholdEnd; threshold += thresholdStep) {
+                    List<List<Integer>> processedValues = process(refinedValues, entityMetric, threshold);
+                    Result result = calc(data, processedValues, processedIds);
+
+                    float precision = result.getPrecision();
+                    float recall = result.getRecall();
+
+                    System.out.println(file.getName() + " '" + entityMetric.getShortDescriptionString()+ "' " + keyMetricName
+                            + " " + threshold + " " + precision + " " + recall);
+                }
+            }
+        }
+    }
+
+    public static void main_0(String[] args) throws IOException {
         String filename = args[0];
         String entityMetricName = args[1];
         String keyMetricName = args[2];
