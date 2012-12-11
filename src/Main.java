@@ -39,6 +39,7 @@ public class Main {
         float threshold = Float.parseFloat(args[3]);
         boolean outputData = args.length > 4;
 
+        System.out.println(entityMetricName);
         InterfaceStringMetric entityMetric = entityMetricMap.get(entityMetricName);
         InterfaceStringMetric keyMetric = keyMetricMap.get(keyMetricName);
 
@@ -54,10 +55,9 @@ public class Main {
             printMatching(data, ATTR_0_NUM, processedValues);
         }
 
-        Float precision = 0f;
-        Float recall = 0f;
-
-        calc(data, processedValues, processedIds, precision, recall);
+        Result result = calc(data, processedValues, processedIds);
+        float precision = result.getPrecision();
+        float recall = result.getRecall();
 
         System.out.println(filename + " " + entityMetricName+ " " + keyMetricName
                                     + " " + threshold + " " + precision + " " + recall);
@@ -94,7 +94,7 @@ public class Main {
         return refinedIds;
     }
 
-    private static void calc(Instances data, List<List<Integer>> processedValues, List<List<Integer>> processedIds, Float precision, Float recall) {
+    private static Result calc(Instances data, List<List<Integer>> processedValues, List<List<Integer>> processedIds) {
         int truePositive = 0;
         int falseNegative = 0;
         int falsePositive = 0;
@@ -120,8 +120,10 @@ public class Main {
             falsePositive += bar.size() - intersec;
         }
 
-        precision = (float) truePositive / (truePositive + falsePositive);
-        recall = (float) truePositive / (truePositive + falseNegative);
+        float precision = (float) truePositive / (truePositive + falsePositive);
+        float recall = (float) truePositive / (truePositive + falseNegative);
+
+        return new Result(precision, recall);
     }
 
     private static void printMatching(Instances data, int attribute, List<List<Integer>> processedValues) {
