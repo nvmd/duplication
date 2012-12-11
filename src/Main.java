@@ -33,9 +33,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         final File root = new File(args[0]);
-        final float thresholdStep = args.length >= 1 ? Float.parseFloat(args[3]) : 0.1f;
-        final float thresholdStart = args.length >= 2 ?  Float.parseFloat(args[1]) : 0;
-        final float thresholdEnd = args.length >= 3 ?  Float.parseFloat(args[2]) : 1;
+        final float thresholdStep = args.length > 1 ? Float.parseFloat(args[1]) : 0.1f;
+        final float thresholdStart = args.length > 2 ?  Float.parseFloat(args[2]) : 0;
+        final float thresholdEnd = args.length > 3 ?  Float.parseFloat(args[3]) : 1;
 
         File[] files = root.listFiles();
 
